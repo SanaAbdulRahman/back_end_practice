@@ -9,18 +9,23 @@ const cors=require('cors');
 
 const PORT=process.env.PORT || 7000
 require('dotenv/config');
+//const authJwt=require('./helpers/jwt');
+//const errorHandler=require('./helpers/error-handler');
 
 app.use(cors());
 app.options('*',cors());
 //middleware
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
+//app.use(errorHandler());
+//app.use(authJwt());
 
 //Routes
 const productsRouter=require('./routes/products');
 const categoriesRouter=require('./routes/categories');
 const ordersRouter=require('./routes/orders');
 const usersRouter=require('./routes/users');
+
 
 const api=process.env.API_URL;
 

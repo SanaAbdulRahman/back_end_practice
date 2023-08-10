@@ -38,11 +38,15 @@ const productSchema=mongoose.Schema({
         type:Number,
         default:0
     },
-    // isFeatured:{
-    //     type:Boolean,
-    //     default:false
-    //     },
+    isFeatured:{
+        type:Boolean,
+        default:false
+        },
     createdAt:{
+        type:Date,
+        default:Date.now
+    },
+    updatedAt:{
         type:Date,
         default:Date.now
     }
@@ -51,5 +55,11 @@ const productSchema=mongoose.Schema({
     //     required:true
     // }
 })
+productSchema.virtual('id').get(function(){
+    return this._id.toHexString();
+});
+productSchema.set('toJSON',{
+    virtuals:true,
+});
 
 exports.Product=mongoose.model('Product',productSchema);
