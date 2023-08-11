@@ -2,7 +2,24 @@ const {Users, User}=require('../models/user');
 const express=require('express');
 const router=express.Router();
 const bcrypt=require('bcryptjs');
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+
+
+
+router.get('/login', (req, res) => {
+    
+    res.render('login'); // Renders views/home.ejs with the provided data
+});
+router.get('/register', (req, res) => {
+   
+    res.render('register'); // Renders views/home.ejs with the provided data
+});
+
+
+// router.get('/register',(req,res)=>{
+//     res.render('register')
+// })
+
 
 router.get(`/`,async(req,res)=>{
     const userList=await User.find().select('-passwordHash')
@@ -33,16 +50,16 @@ router.post('/',async(req,res)=>{
         passwordHash:bcrypt.hashSync(req.body.password, 10),
         phone:req.body.phone,
         isAdmin:req.body.isAdmin,
-        apartment:req.body.apartment,
-        city:req.body.city,
-        street:req.body.street     
+        // apartment:req.body.apartment,
+        // city:req.body.city,
+        // street:req.body.street     
     })
     user=await user.save();
 
     if(!user){
         return res.status(404).send('The user cannot be created !');
     }
-        res.send(user);
+        res.render('home');
 })
 router.post('/login',async(req,res)=>{
     const secret=process.env.secret

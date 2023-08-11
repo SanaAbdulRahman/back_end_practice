@@ -17,18 +17,18 @@ const userSchema=mongoose.Schema({
         type:String,
         required:true
     },
-    street:{
-        type:String,
-        required:true
-    },
-    apartment:{
-        type:String,
-        required:true
-    },
-    city:{
-        type:String,
-        required:true
-    },
+    // street:{
+    //     type:String,
+    //     required:true
+    // },
+    // apartment:{
+    //     type:String,
+    //     required:true
+    // },
+    // city:{
+    //     type:String,
+    //     required:true
+    // },
     isAdmin:{
         type:Boolean,
         default:false,

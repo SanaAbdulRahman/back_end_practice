@@ -6,20 +6,47 @@ const morgan=require('morgan');
 
 const mongoose=require('mongoose');
 const cors=require('cors');
+const path=require('path')
+const ejs=require('ejs')
+const session = require('express-session');
+const MongoStore = require('connect-mongodb-session')(session);
 
 const PORT=process.env.PORT || 7000
 require('dotenv/config');
 //const authJwt=require('./helpers/jwt');
 //const errorHandler=require('./helpers/error-handler');
 
+// Configure session middleware with MongoDB session store
+const store = new MongoStore({
+    uri: 'mongodb://127.0.0.1:27017/user-auth',
+    collection: 'sessions'
+  });
+  
+  app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  }));
+  
+ 
+ 
+  
+  // Parse request bodies
+  //app.use(express.urlencoded({ extended: true }));
+
 app.use(cors());
 app.options('*',cors());
 //middleware
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
+app.use(express.static('public'))
 //app.use(errorHandler());
 //app.use(authJwt());
-
+ // Set EJS as the view engine
+app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname, 'views'));
 //Routes
 const productsRouter=require('./routes/products');
 const categoriesRouter=require('./routes/categories');
