@@ -8,6 +8,8 @@ const mongoose=require('mongoose');
 const cors=require('cors');
 const path=require('path')
 const ejs=require('ejs')
+const cookieParser=require('cookie-parser');
+const flash=require('express-flash');
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session);
 
@@ -21,25 +23,21 @@ const store = new MongoStore({
     uri: 'mongodb://127.0.0.1:27017/user-auth',
     collection: 'sessions'
   });
-  
+  app.use(cookieParser());
   app.use(session({
-    secret: 'your-secret-key',
+    secret: 'mysecretkey',
     resave: false,
     saveUninitialized: false,
     store: store
   }));
-  
- 
- 
-  
-  // Parse request bodies
-  //app.use(express.urlencoded({ extended: true }));
-
+app.use(flash());
 app.use(cors());
 app.options('*',cors());
 //middleware
+// Parse request bodies
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+//middleware
 app.use(morgan('tiny'));
 app.use(express.static('public'))
 //app.use(errorHandler());

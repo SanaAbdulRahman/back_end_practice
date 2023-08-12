@@ -17,11 +17,17 @@ align-content: center;
 }
 
 .card{
-height: 370px;
+/* height: 370px; */
+height: 465px;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
 background-color: rgba(0,0,0,0.5) !important;
+}
+
+.card-footer {
+   position: relative;
+   margin-top: 20px; /* Add margin to create some space between form and footer */
 }
 
 .social_icon span{

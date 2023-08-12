@@ -3,24 +3,95 @@ const express=require('express');
 const router=express.Router();
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
+const { check, validationResult } = require('express-validator');
 
 
+router.get('/home',(req,res)=>{
+    res.render('home');
+ })
 
 router.get('/login', (req, res) => {
-    
-    res.render('login'); // Renders views/home.ejs with the provided data
+    res.render('login'); 
 });
+
+
+router.get('/adminLogin',(req,res)=>{
+    res.render('admin-login');
+})
+
 router.get('/register', (req, res) => {
-   
-    res.render('register'); // Renders views/home.ejs with the provided data
+    res.render('register',{errors:''}); 
 });
 
 
-// router.get('/register',(req,res)=>{
-//     res.render('register')
-// })
+ router.post('/register',
+ [
+ check('name').notEmpty().withMessage('Username is required'),
+ check('email').isEmail().withMessage('Email is not valid'),
+ check('phone').matches(/[0-9]{10}/).withMessage('Mobile number is not valid'),
+ check('password').notEmpty().isLength({min :6}).withMessage('Password must be atleast 8 characters'),
+ ],async(req,res)=>{
+ 
+    const errors=validationResult(req);
+    if(!errors.isEmpty()){
+        const alert = errors.array()
+        // return res.render('register',{errors:errors.mapped()})
+        return res.render('register',{alert})
+    }
+ let user=new User({
+     name:req.body.name,
+     email:req.body.email,
+     passwordHash:bcrypt.hashSync(req.body.password, 10),
+     phone:req.body.phone,
+     // isAdmin:req.body.isAdmin,
+     // apartment:req.body.apartment,
+     // city:req.body.city,
+     // street:req.body.street     
+ })
+ 
+ user=await user.save();
+
+ if(!user){
+     return res.status(404).send('The user cannot be created !');
+ }
+     res.render('home');
+})
 
 
+
+router.post('/login',async(req,res)=>{
+    //const {email,passwordHash}=req.body;
+    const user=await User.findOne({email:req.body.email})
+
+    // if(!user){
+    //     return res.status(400).send('Invalid email ID');
+    // }
+    try{
+    if(user && bcrypt.compareSync(req.body.password,user.passwordHash)){
+        //User logged in successfully
+        req.session.user=user
+        res.redirect('/home');
+    }else{
+        //Invalid emailid or password
+        res.redirect('/login')
+    }
+}catch(error){
+    console.error("Error logging in :",error);
+    res.redirect('/login');
+}
+})
+//POST 
+//Users can register through this api
+
+
+
+
+
+
+
+
+
+//Admin dashboard with list of users
 router.get(`/`,async(req,res)=>{
     const userList=await User.find().select('-passwordHash')
     // const userList=await User.find().select('-passwordHash name phone email');
@@ -32,7 +103,7 @@ router.get(`/`,async(req,res)=>{
     }
     res.send(userList);
 })
-
+//Admin get users by id
 router.get('/:id',async(req,res)=>{
     const user=await User.findById(req.params.id).select('-passwordHash');
 
@@ -43,7 +114,8 @@ router.get('/:id',async(req,res)=>{
 })
 //POST
 //Admin can add users
-router.post('/',async(req,res)=>{
+router.post('/' ,async(req,res)=>{
+
     let user=new User({
         name:req.body.name,
         email:req.body.email,
@@ -59,48 +131,9 @@ router.post('/',async(req,res)=>{
     if(!user){
         return res.status(404).send('The user cannot be created !');
     }
-        res.render('home');
-})
-router.post('/login',async(req,res)=>{
-    const secret=process.env.secret
-    const user=await User.findOne({email:req.body.email})
-
-    if(!user){
-        return res.status(400).send('Invalid email ID');
-    }
-    if(user && bcrypt.compareSync(req.body.password,user.passwordHash)){
-        const token=jwt.sign({
-            userId:user.id,
-            isAdmin:user.isAdmin
-        },
-        secret,
-        {expiresIn:'1d'} 
-        )
-        res.status(200).send({user:user.email,token:token})
-    }else{
-        res.status(400).send('Password is wrong!')
-    }
-})
-//POST 
-//Users can register through this api
-router.post('/register',async(req,res)=>{
-    let user=new User({
-        name:req.body.name,
-        email:req.body.email,
-        passwordHash:bcrypt.hashSync(req.body.password, 10),
-        phone:req.body.phone,
-        isAdmin:req.body.isAdmin,
-        apartment:req.body.apartment,
-        city:req.body.city,
-        street:req.body.street     
-    })
-    user=await user.save();
-
-    if(!user){
-        return res.status(404).send('The user cannot be created !');
-    }
         res.send(user);
-})
+ })
+
 
 router.get('/get/count', async (req, res) => {
     try {
