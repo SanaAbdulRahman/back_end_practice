@@ -9,7 +9,7 @@ const cors=require('cors');
 const path=require('path')
 const ejs=require('ejs')
 const cookieParser=require('cookie-parser');
-const flash=require('express-flash');
+//const flash=require('express-flash');
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session);
 
@@ -27,10 +27,10 @@ const store = new MongoStore({
   app.use(session({
     secret: 'mysecretkey',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: store
   }));
-app.use(flash());
+//app.use(flash());
 app.use(cors());
 app.options('*',cors());
 //middleware

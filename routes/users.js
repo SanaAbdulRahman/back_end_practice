@@ -7,10 +7,18 @@ const { check, validationResult } = require('express-validator');
 
 
 router.get('/home',(req,res)=>{
-    res.render('home');
+    const user=req.session.user;
+    if (!user) {
+        return res.render('login'); // Redirect to your login page
+    }
+        res.render('home',{user});
+        
  })
 
 router.get('/login', (req, res) => {
+    if (req.session.user) {
+        return res.render('home'); // Redirect to your home page
+    }
     res.render('login'); 
 });
 
@@ -20,10 +28,14 @@ router.get('/adminLogin',(req,res)=>{
 })
 
 router.get('/register', (req, res) => {
+    if (req.session.user) {
+        return res.render('home'); // Redirect to your home page
+    }
     res.render('register',{errors:''}); 
 });
 
-
+//POST 
+//Users can register through this api
  router.post('/register',
  [
  check('name').notEmpty().withMessage('Username is required'),
@@ -38,50 +50,73 @@ router.get('/register', (req, res) => {
         // return res.render('register',{errors:errors.mapped()})
         return res.render('register',{alert})
     }
- let user=new User({
-     name:req.body.name,
-     email:req.body.email,
-     passwordHash:bcrypt.hashSync(req.body.password, 10),
-     phone:req.body.phone,
-     // isAdmin:req.body.isAdmin,
-     // apartment:req.body.apartment,
-     // city:req.body.city,
-     // street:req.body.street     
- })
- 
- user=await user.save();
+    
+    try {
+        const existingUser = await User.findOne({ email: req.body.email });
+        if (existingUser) {
+            const alert = [{ msg: 'Email already registered' }];
+            return res.render('register', { alert });
+        }
 
- if(!user){
-     return res.status(404).send('The user cannot be created !');
- }
-     res.render('home');
-})
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
+        const newUser = new User({
+            name: req.body.name,
+            email: req.body.email,
+            passwordHash: hashedPassword,
+            phone: req.body.phone,
+        });
 
+        await newUser.save();
 
-router.post('/login',async(req,res)=>{
-    //const {email,passwordHash}=req.body;
-    const user=await User.findOne({email:req.body.email})
+        req.session.user = newUser; // Store user in session
+        if(req.session.user){
+        res.render('home');
+        }
+        else{
+            res.render('register');
+        }
 
-    // if(!user){
-    //     return res.status(400).send('Invalid email ID');
-    // }
-    try{
-    if(user && bcrypt.compareSync(req.body.password,user.passwordHash)){
-        //User logged in successfully
-        req.session.user=user
-        res.redirect('/home');
-    }else{
-        //Invalid emailid or password
-        res.redirect('/login')
+    } catch (error) {
+        console.error('Error while registering:', error);
+        res.status(500).send('An error occurred during registration');
+        
     }
-}catch(error){
-    console.error("Error logging in :",error);
-    res.redirect('/login');
-}
-})
-//POST 
-//Users can register through this api
+});
+
+router.post('/login', async (req, res) => {
+  
+    const { email,password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+            return res.render('login', { error: 'Invalid email or password' });
+        }
+        
+        req.session.user = user; // Store user in session
+        console.log(req.session.user);
+        res.render('home'); // Redirect to your home page after successful login
+       
+        
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).send('An error occurred during login');
+    }
+});
+// Logout route
+
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).send('Error while logging out');
+        }
+        res.redirect('/api/v1/users/login'); // Redirect to your login page after logout
+    });
+});
+
 
 
 
