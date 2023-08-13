@@ -50,6 +50,7 @@ const productsRouter=require('./routes/products');
 const categoriesRouter=require('./routes/categories');
 const ordersRouter=require('./routes/orders');
 const usersRouter=require('./routes/users');
+const adminRouter=require('./routes/admin');
 
 
 const api=process.env.API_URL;
@@ -58,6 +59,7 @@ app.use(`${api}/products`,productsRouter);
 app.use(`${api}/categories`,categoriesRouter);
 app.use(`${api}/orders`,ordersRouter);
 app.use(`${api}/users`,usersRouter);
+app.use(`${api}/`,adminRouter);
 
 mongoose.connect('mongodb://127.0.0.1:27017/eshop-database')
 .then(()=>{

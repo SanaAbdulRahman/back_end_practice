@@ -2,7 +2,7 @@ const {Users, User}=require('../models/user');
 const express=require('express');
 const router=express.Router();
 const bcrypt=require('bcryptjs');
-const jwt=require('jsonwebtoken');
+// const jwt=require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 
 
@@ -23,9 +23,6 @@ router.get('/login', (req, res) => {
 });
 
 
-router.get('/adminLogin',(req,res)=>{
-    res.render('admin-login');
-})
 
 router.get('/register', (req, res) => {
     if (req.session.user) {
