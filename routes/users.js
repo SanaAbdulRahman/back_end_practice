@@ -7,20 +7,37 @@ const { check, validationResult } = require('express-validator');
 
 
 router.get('/home',(req,res)=>{
+   // const user=req.session.user
+    res.render('user/home',{username:req.session.user});
+    //const user=req.session.user;
+    //const username=user.name
+    
+    // if (!user) {
+    //     console.log(user);
+    //     return res.render('login'); // Redirect to your login page
+    // }
+       // res.render('user/home',{username:req.session.user.name});
+        //res.render('user/cart');
+        
+ })
+ router.get('/cart',(req,res)=>{
     const user=req.session.user;
-    const username=user.name
+    //const username=user.name
     
     if (!user) {
         console.log(user);
         return res.render('login'); // Redirect to your login page
     }
-        res.render('user/home',{username});
+        res.render('user/cart',{username:req.session.user.name});
+        //res.render('user/cart');
         
  })
 
 router.get('/login', (req, res) => {
+   
     if (req.session.user) {
-        return res.render('user/home'); // Redirect to your home page
+        return res.render('user/cart',{username:req.session.user.name}); // Redirect to your home page
+       // return res.render('user/cart'); // Redirect to your home page
     }
     res.render('login'); 
 });
@@ -28,8 +45,13 @@ router.get('/login', (req, res) => {
 
 
 router.get('/register', (req, res) => {
-    if (req.session.user) {
-        return res.render('user/home'); // Redirect to your home page
+    const user=req.session.user;
+    console.log(user);
+   // const username=user.name
+    if (user)
+     {
+         return res.render('user/cart',{username:req.session.user}); // Redirect to your home page
+        //return res.render('user/cart'); // Redirect to your home page
     }
     res.render('register',{errors:''}); 
 });
@@ -73,7 +95,8 @@ router.get('/register', (req, res) => {
         const username=req.session.user.name// Store user in session
        
         if(req.session.user){
-        res.render('user/home',{username});
+         res.render('user/cart',{username});
+        //res.render('user/cart');
         }
         else{
             res.render('register');
@@ -103,7 +126,8 @@ router.post('/login', async (req, res) => {
          if(req.session.user){
             const username=req.session.user
             console.log(username);
-        res.render('user/home',{username:username.name}); // Redirect to your home page after successful login
+         res.render('user/home',{username:username.name});
+        // res.render('user/cart'); // Redirect to your home page after successful login
          }
         
     } catch (error) {
@@ -119,7 +143,7 @@ router.get('/logout', (req, res) => {
             console.error('Error destroying session:', err);
             return res.status(500).send('Error while logging out');
         }
-        res.redirect('/api/v1/users/login'); // Redirect to your login page after logout
+        res.redirect('/api/v1/users/home'); // Redirect to your login page after logout
     });
 });
 

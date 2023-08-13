@@ -7,7 +7,8 @@ const morgan=require('morgan');
 const mongoose=require('mongoose');
 const cors=require('cors');
 const path=require('path')
-const ejs=require('ejs')
+const ejs=require('ejs');
+const expressLayouts=require('express-ejs-layouts')
 const cookieParser=require('cookie-parser');
 //const flash=require('express-flash');
 const session = require('express-session');
@@ -40,6 +41,9 @@ app.use(express.urlencoded({ extended: true }));
 //middleware
 app.use(morgan('tiny'));
 app.use(express.static('public'))
+app.use(expressLayouts)
+app.set('layout','./layouts/layout')
+
 //app.use(errorHandler());
 //app.use(authJwt());
  // Set EJS as the view engine
