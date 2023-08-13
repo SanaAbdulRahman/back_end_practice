@@ -8,10 +8,13 @@ const { check, validationResult } = require('express-validator');
 
 router.get('/home',(req,res)=>{
     const user=req.session.user;
+    const username=user.name
+    
     if (!user) {
+        console.log(user);
         return res.render('login'); // Redirect to your login page
     }
-        res.render('user/home',{user});
+        res.render('user/home',{username});
         
  })
 
@@ -66,9 +69,11 @@ router.get('/register', (req, res) => {
 
         await newUser.save();
 
-        req.session.user = newUser; // Store user in session
+        req.session.user = newUser; 
+        const username=req.session.user.name// Store user in session
+       
         if(req.session.user){
-        res.render('user/home');
+        res.render('user/home',{username});
         }
         else{
             res.render('register');
@@ -94,10 +99,12 @@ router.post('/login', async (req, res) => {
         
         req.session.user = user; // Store user in session
         console.log(req.session.user);
-        const username=req.session.user
-         console.log(username);
-        res.render('user/home',{username:username.name}); // Redirect to your home page after successful login
        
+         if(req.session.user){
+            const username=req.session.user
+            console.log(username);
+        res.render('user/home',{username:username.name}); // Redirect to your home page after successful login
+         }
         
     } catch (error) {
         console.error('Error during login:', error);
