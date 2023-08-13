@@ -11,13 +11,13 @@ router.get('/home',(req,res)=>{
     if (!user) {
         return res.render('login'); // Redirect to your login page
     }
-        res.render('home',{user});
+        res.render('user/home',{user});
         
  })
 
 router.get('/login', (req, res) => {
     if (req.session.user) {
-        return res.render('home'); // Redirect to your home page
+        return res.render('user/home'); // Redirect to your home page
     }
     res.render('login'); 
 });
@@ -26,7 +26,7 @@ router.get('/login', (req, res) => {
 
 router.get('/register', (req, res) => {
     if (req.session.user) {
-        return res.render('home'); // Redirect to your home page
+        return res.render('user/home'); // Redirect to your home page
     }
     res.render('register',{errors:''}); 
 });
@@ -68,7 +68,7 @@ router.get('/register', (req, res) => {
 
         req.session.user = newUser; // Store user in session
         if(req.session.user){
-        res.render('home');
+        res.render('user/home');
         }
         else{
             res.render('register');
@@ -94,7 +94,9 @@ router.post('/login', async (req, res) => {
         
         req.session.user = user; // Store user in session
         console.log(req.session.user);
-        res.render('home'); // Redirect to your home page after successful login
+        const username=req.session.user
+         console.log(username);
+        res.render('user/home',{username:username.name}); // Redirect to your home page after successful login
        
         
     } catch (error) {
