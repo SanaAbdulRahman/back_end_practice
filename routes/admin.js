@@ -13,6 +13,19 @@ router.get('/adminLogin',(req,res)=>{
     }
 })
 
+
+// router.post("/adminLogin",async(req,res)=>{
+//     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+//     const admin = new Admin({
+//         name: req.body.name,
+//         passwordHash: hashedPassword,
+//         });
+//         const adminUser=await admin.save();
+
+//         if(adminUser){
+//             console.log("Successfully created admin");
+//         }
+// })
 router.post("/adminLogin",async (req, res) => {
     //const { username, password } = req.body;
     const name=req.body.name;
@@ -23,7 +36,7 @@ router.post("/adminLogin",async (req, res) => {
       try{
   const admin=await Admin.findOne({name});
 
-  if(!admin )
+  if(!admin || !bcrypt.compareSync(password, admin.passwordHash) )
     {
       return res.render("admin-login", { error: "Invalid credentials" });
     }

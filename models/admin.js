@@ -9,11 +9,7 @@ const adminSchema=mongoose.Schema({
         type:String,
         required:true
     },
-    phone:{
-        type:Number,
-        unique:true,
-        required:true
-    },
+ 
     // isAdmin:{
     //     type:Boolean,
     //     default:false,
