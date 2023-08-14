@@ -8,7 +8,7 @@ const { check, validationResult } = require('express-validator');
 
 router.get('/home',(req,res)=>{
    // const user=req.session.user
-    res.render('user/home',{username:req.session.user});
+    res.render('user/home',{username:req.session.user,isUser:true});
     //const user=req.session.user;
     //const username=user.name
     
@@ -26,9 +26,9 @@ router.get('/home',(req,res)=>{
     
     if (!user) {
         console.log(user);
-        return res.render('login'); // Redirect to your login page
+        return res.render('login',{layout:'./layouts/login-layout'}); // Redirect to your login page
     }
-        res.render('user/cart',{username:req.session.user.name});
+        res.render('user/cart',{username:req.session.user.name,isUser:true});
         //res.render('user/cart');
         
  })
@@ -36,10 +36,10 @@ router.get('/home',(req,res)=>{
 router.get('/login', (req, res) => {
    
     if (req.session.user) {
-        return res.render('user/cart',{username:req.session.user.name}); // Redirect to your home page
+        return res.render('user/cart',{username:req.session.user.name,isUser:true}); // Redirect to your home page
        // return res.render('user/cart'); // Redirect to your home page
     }
-    res.render('login'); 
+    res.render('login',{layout:'./layouts/login-layout'}); 
 });
 
 
@@ -50,10 +50,10 @@ router.get('/register', (req, res) => {
    // const username=user.name
     if (user)
      {
-         return res.render('user/cart',{username:req.session.user}); // Redirect to your home page
+         return res.render('user/cart',{username:req.session.user,isUser:true}); // Redirect to your home page
         //return res.render('user/cart'); // Redirect to your home page
     }
-    res.render('register',{errors:''}); 
+    res.render('register',{errors:'',layout:'./layouts/register-layout'}); 
 });
 
 //POST 
@@ -70,14 +70,14 @@ router.get('/register', (req, res) => {
     if(!errors.isEmpty()){
         const alert = errors.array()
         // return res.render('register',{errors:errors.mapped()})
-        return res.render('register',{alert})
+        return res.render('register',{alert,layout:'./layouts/register-layout'})
     }
     
     try {
         const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) {
             const alert = [{ msg: 'Email already registered' }];
-            return res.render('register', { alert });
+            return res.render('register', { alert ,layout:'./layouts/register-layout'});
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -95,11 +95,11 @@ router.get('/register', (req, res) => {
         const username=req.session.user.name// Store user in session
        
         if(req.session.user){
-         res.render('user/cart',{username});
+         res.render('user/cart',{username,isUser:true});
         //res.render('user/cart');
         }
         else{
-            res.render('register');
+            res.render('register',{layout:'./layouts/register-layout'});
         }
 
     } catch (error) {
@@ -117,7 +117,7 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
-            return res.render('login', { error: 'Invalid email or password' });
+            return res.render('login', { error: 'Invalid email or password',layout:'./layouts/login-layout' });
         }
         
         req.session.user = user; // Store user in session
@@ -126,7 +126,7 @@ router.post('/login', async (req, res) => {
          if(req.session.user){
             const username=req.session.user
             console.log(username);
-         res.render('user/home',{username:username.name});
+         res.render('user/home',{username:username.name,isUser:true});
         // res.render('user/cart'); // Redirect to your home page after successful login
          }
         
@@ -143,7 +143,7 @@ router.get('/logout', (req, res) => {
             console.error('Error destroying session:', err);
             return res.status(500).send('Error while logging out');
         }
-        res.redirect('/api/v1/users/home'); // Redirect to your login page after logout
+        res.redirect('/api/v1/users/home'); // Redirect to your home page after logout
     });
 });
 

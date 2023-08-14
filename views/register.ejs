@@ -1,154 +1,77 @@
-
-<!------ Include the above in your HEAD tag ---------->
-
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Login Page</title>
-   <!--Made with love by Mutiullah Samim -->
-   
-	<!--Bootsrap 4 CDN-->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    
-    <!--Fontawesome CDN-->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
-	<!--Custom styles-->
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</head>
-<body>
 <div class="container">
-		<div class="d-flex justify-content-center h-100">
-		<div class="card">
-			<div class="card-header">
-				<h3>Sign Up</h3>
-				<!-- <div class="d-flex justify-content-end social_icon">
-					<span><i class="fab fa-facebook-square"></i></span>
-					<span><i class="fab fa-google-plus-square"></i></span>
-					<span><i class="fab fa-twitter-square"></i></span>
-				</div> -->
-			</div>
-			<div class="card-body">
-				<form action="/api/v1/users/register" method="post" enctype="application/x-www-form-urlencoded">
+	<div class="d-flex justify-content-center h-100">
+	<div class="card">
+		<div class="card-header">
+			<h3>Sign Up</h3>
+			<!-- <div class="d-flex justify-content-end social_icon">
+				<span><i class="fab fa-facebook-square"></i></span>
+				<span><i class="fab fa-google-plus-square"></i></span>
+				<span><i class="fab fa-twitter-square"></i></span>
+			</div> -->
+		</div>
+		<div class="card-body">
+			<form action="/api/v1/users/register" method="post" enctype="application/x-www-form-urlencoded">
+				
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="fas fa-user"></i></span>
+					</div>
+					<input type="text" class="form-control" name="name" placeholder="username" onkeydown="return alphaOnly(event);"
+					onblur="if (this.value == '') {this.value = 'Type Letters Only';}"
+					onfocus="if (this.value == 'Type Letters Only') {this.value = '';}">
+				
+						</div>
+					<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="fas fa-envelope"></i></span>
+					</div>
+					<input type="text" class="form-control" name="email" placeholder="email">
+					
+					</div>
 					
 					<div class="input-group form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-user"></i></span>
-						</div>
-						<input type="text" class="form-control" name="name" placeholder="username" onkeydown="return alphaOnly(event);"
-						onblur="if (this.value == '') {this.value = 'Type Letters Only';}"
-						onfocus="if (this.value == 'Type Letters Only') {this.value = '';}">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="fas fa-mobile"></i></span>
+					</div>
 					
-							</div>
-	                    <div class="input-group form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-envelope"></i></span>
-						</div>
-						<input type="text" class="form-control" name="email" placeholder="email">
-						
-						</div>
-						
-	                    <div class="input-group form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-mobile"></i></span>
-						</div>
-						
-						<input type="text" class="form-control" name="phone" id="mobile" placeholder="mobile" onkeyup="check(); return false;" ><span id="message"></span>
+					<input type="text" class="form-control" name="phone" id="mobile" placeholder="mobile" onkeyup="check(); return false;" ><span id="message"></span>
 
-						</div>
-						
-						<div class="input-group form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-key"></i></span>
-						</div>
-							<input type="password" class="form-control" name="password" id="pwd" placeholder="password" onkeyup="checkpwd();return false;" ><span id="mssge"></span>
-
-						</div>
+					</div>
 					
-					<!-- <div class="row align-items-center remember">
-						<input type="checkbox">Remember Me
-					</div> -->
-					<div class="form-group">
-						<input type="submit" value="Register" class="btn float-right login_btn">
+					<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="fas fa-key"></i></span>
+					</div>
+						<input type="password" class="form-control" name="password" id="pwd" placeholder="password" onkeyup="checkpwd();return false;" ><span id="mssge"></span>
+
+					</div>
+				
+				<!-- <div class="row align-items-center remember">
+					<input type="checkbox">Remember Me
+				</div> -->
+				<div class="form-group">
+					<input type="submit" value="Register" class="btn float-right login_btn">
+				</div>
+			</div>
+				<div class="card-footer ">
+					<div class="d-flex justify-content-center links">
+						Already have an account?<a href="login">Login</a>
+					</div>
+					<div class="d-flex justify-content-center">
+						<a href="#">Forgot your password?</a>
 					</div>
 				</div>
-                    <div class="card-footer ">
-                        <div class="d-flex justify-content-center links">
-                            Already have an account?<a href="login">Login</a>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <a href="#">Forgot your password?</a>
-                        </div>
-                    </div>
-				</form>
-				<% if(typeof alert != 'undefined') { %>
-					<% alert.forEach(function(error) { %>
-						<div class="alert alert-warning alert-dismissible fade show text-danger" role="alert">
-							<%= error.msg %>
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-							  <span aria-hidden="true">&times;</span>
-							</button>
-						  </div>
-					<% }) %>
-				<% } %> 
-		</div>
+			</form>
+			<% if(typeof alert != 'undefined') { %>
+				<% alert.forEach(function(error) { %>
+					<div class="alert alert-warning alert-dismissible fade show text-danger" role="alert">
+						<%= error.msg %>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+					  </div>
+				<% }) %>
+			<% } %> 
 	</div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-</body>
-</html>
-
-<script>
-	function check()
-{
-
-    var mobile = document.getElementById('mobile');
-   
-    
-    var message = document.getElementById('message');
-
-   var goodColor = "#0C6";
-    var badColor = "#FF9B37";
-  
-    if(mobile.value.length!=10){
-       
-        mobile.style.backgroundColor = badColor;
-        message.style.color = badColor;
-        message.innerHTML = "Required 10 digits, match requested format!"
-    }
-	else{
-		mobile.style.backgroundColor = goodColor;
-		message.style.color = goodColor;
-		message.innerHTML = " "
-	}
-	}
-
-	function alphaOnly(event) {
-  var key = event.keyCode;
-  return ((key >= 65 && key <= 90) || key == 8);
-};
-
-function checkpwd(){
- var pwd=document.getElementById("pwd");
- var msge=document.getElementById("mssge");
- var goodColor = "#0C6";
- var badColor = "#FF9B37";
- if(pwd.value.length!=8){
-	pwd.style.backgroundColor = badColor;
-	msge.style.color = badColor;
-	msge.innerHTML = "Required atleast 8 characters including alphanumeric and special characters"
- }
- else{
-	pwd.style.backgroundColor = goodColor;
-	msge.style.color = goodColor;
-	msge.innerHTML = " "
- }
-}
-
-</script>
+</div>
