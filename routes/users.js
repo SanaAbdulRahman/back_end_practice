@@ -95,7 +95,7 @@ router.get('/register', (req, res) => {
         const username=req.session.user.name// Store user in session
        
         if(req.session.user){
-         res.render('user/cart',{username,isUser:true});
+         res.render('user/home',{username,isUser:true});
         //res.render('user/cart');
         }
         else{
